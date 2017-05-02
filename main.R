@@ -63,11 +63,11 @@ oose <- 1 - as.numeric(confusionMatrix(testingdata$classe, rfpredict)$overall[1]
 oose
 
 # Prediction for the test set
-final_result <- predict(modelRf, testRaw)
+final_result <- predict(rfmodel, testingdata)
 final_result
 
 # show outcomes
-traindatanumber <- trainingdata[, sapply(trainingdata, is.numeric)]
+trainingdatanumber <- trainingdata[, sapply(trainingdata, is.numeric)]
 
 corrPlot <- cor(trainingdatanumber[, -length(names(trainingdatanumber))])
 corrplot(corrPlot, method="color")
