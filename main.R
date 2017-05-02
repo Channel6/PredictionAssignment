@@ -72,3 +72,6 @@ trainingdatanumber <- trainingdata[, sapply(trainingdata, is.numeric)]
 corrPlot <- cor(trainingdatanumber[, -length(names(trainingdatanumber))])
 corrplot(corrPlot, method="color")
 
+tree_tree <- rpart(classe ~ ., data=trainingdata, method="class")
+prp(tree_tree) # plotting using library(rpart.plot)
+
