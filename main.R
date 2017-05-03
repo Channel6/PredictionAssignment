@@ -1,3 +1,4 @@
+# from https://rstudio-pubs-static.s3.amazonaws.com/197217_454443f5617c446a89003f1207a43f36.html
 trainingdatafile <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
 testdatafile  <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
 if(!file.exists("pml-testing.csv")){
@@ -14,6 +15,8 @@ library(randomForest)
 library(corrplot)
 library(rpart)
 library(rpart.plot)
+library(RColorBrewer)
+library(rattle)
 library(e1071)
 
 training  <- read.csv(trainingdatafile)
