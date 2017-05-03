@@ -1,0 +1,11 @@
+---
+title: "Practical Machine Learning"
+author: "Glenn Kerbein"
+date: "May 2, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
