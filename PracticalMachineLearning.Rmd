@@ -78,3 +78,55 @@ trainingdata <- training[inTrain, ]
 testingdata <- training[-inTrain, ]
 ```
 
+# Creating the model using Random Forest method
+Using the ```trainControl``` function, then passing this to ```train()``` will perform this task.
+## Fitting Random Forest.
+Random Forest has a high accurancy rate, combined with robust correlated covariates and outlier selection. This is the most desirable.
+Cross validation is used as train control method with 5-fold as parameter number. For best fold seleciton, ```tuneRF``` would find the optimal value.
+```{r echo=TRUE}
+rfcontrol <- trainControl(
+	method="cv",
+	5
+)
+rfmodel <- train(
+	classe ~ .,
+	data=trainingdata,
+	method="rf",
+	trControl=rfcontrol,
+	ntree=250
+)
+rfmodel
+```
+# Performance evaluation of the Random forest algorithm.
+Estimate the performance of the model on the validation data set (our ```testingdata``` variable). A ```confusionMatrix()``` call, presented below, as well as the estimated accuracy and the the estimated out-of-sample error of the model are calculated.
+```{r echo=TRUE}
+rfpredict <- predict(rfmodel, testingdata)
+confusionMatrix(testingdata$classe, rfpredict)
+```
+```{r echo=TRUE}
+accuracy <- postResample(rfpredict, testingdata$classe)
+accuracy
+```
+```{r echo=TRUE}
+accuracy <- postResample(rfpredict, testingdata$classe)
+accuracy
+```
+# Prediction for the Test Data Set
+```{r echo=TRUE}
+final_result <- predict(rfmodel, testingdata)
+final_result
+```
+
+# Appendix
+## Correlation Matrix
+Below is a visual Correlation Matrix of ```trainingdata```, which is the 3/4 data from the split of ```training```. ```coorPlot()```, from the coorPlot package, creates this graphic.
+```training``` must be numeric so ```trainingdatanumber``` can be created with ```trainingdatanumber <- trainingdata[, sapply(trainingdata, is.numeric)]```.
+```{r echo=TRUE}
+corrPlot <- cor(trainingdatanumber[, -length(names(trainingdatanumber))])
+corrplot(corrPlot, method="color")
+```
+## Decision Tree Visualization of trainData using rpart
+```{r echo=TRUE}
+tree_tree <- rpart(classe ~ ., data=trainingdata, method="class")
+prp(tree_tree)
+```
