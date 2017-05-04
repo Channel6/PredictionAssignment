@@ -9,14 +9,14 @@ if(!file.exists("pml-training.csv")){
 
 
 # Usuful libraries
-library(caret)
-library(randomForest)
-library(corrplot)
-library(rpart)
-library(rpart.plot)
-library(RColorBrewer)
-library(rattle)
-library(e1071)
+suppressMessages(library(caret))
+suppressMessages(library(randomForest))
+suppressMessages(library(corrplot))
+suppressMessages(library(rpart))
+suppressMessages(library(rpart.plot))
+suppressMessages(library(RColorBrewer))
+suppressMessages(library(rattle))
+suppressMessages(library(e1071))
 
 training  <- read.csv(trainingdatafile)
 testing <- read.csv(testdatafile)
@@ -31,6 +31,12 @@ dim(testing)
 names(training)
 
 ## remove NA values
+training <- training[, colSums(is.na(training)) == 0] 
+testing <- testing[, colSums(is.na(testing)) == 0] 
+
+training <- training[,-c(1,5)]
+testing <- testing[,-c(1,5)]
+
 testing  <- testing[, colSums(is.na(testing)) == 0]
 training  <- training[, colSums(is.na(training)) == 0]
 

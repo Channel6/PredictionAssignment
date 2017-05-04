@@ -9,3 +9,72 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Introduction
+Using devices such as *Jawbone Up*, *Nike FuelBand*, and *Fitbit* it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how *much* of a particular activity they do, but they rarely quantify *how well they do it*.
+
+In this project, we will use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to predict the manner in which they did the exercise. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways.
+
+# Data Processing
+Load relevant libraries
+```{r echo=TRUE}
+suppressMessages(library(caret))
+suppressMessages(library(randomForest))
+suppressMessages(library(corrplot))
+suppressMessages(library(rpart))
+suppressMessages(library(rpart.plot))
+suppressMessages(library(RColorBrewer))
+suppressMessages(library(rattle))
+suppressMessages(library(e1071))
+```
+
+# Download the Data
+```{r echo=TRUE}
+trainingdatafile <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+testdatafile  <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+if(!file.exists("pml-testing.csv")){
+	download.file(testdatafile, "pml-testing.csv", method="curl")
+}
+if(!file.exists("pml-training.csv")){
+	download.file(trainingdatafile, "pml-training.csv", method="curl")
+}
+```
+
+# Read the Data
+After downloading the relevant CSV files, we now read them into relevant variables.
+```{r echo=TRUE}
+training  <- read.csv(trainingdatafile)
+testing <- read.csv(testdatafile)
+```
+# Exploring the data
+```{r echo=TRUE}
+dim(training)
+dim(testing)
+names(training)
+```
+The training data set contains 19622 observations and 160 variables, while the testing data set contains 20 observations and 160 variables. The "classe" variable in the training set is the outcome to predict.
+
+# Clean the data
+Set any foreign characters to NA first.
+Remove the variable(s) that countain most NA values. These are 'X', ‘user_name’ and several timestamp-related variables, represented by culumns 1-5.
+```{r echo=TRUE}
+training[training == "#DIV/0!"]  <- NA
+training[training == ""]  <- NA
+
+training <- training[, colSums(is.na(training)) == 0] 
+testing <- testing[, colSums(is.na(testing)) == 0] 
+
+training <- training[,-c(1,5)]
+testing <- testing[,-c(1,5)]
+
+testing  <- testing[, colSums(is.na(testing)) == 0]
+training  <- training[, colSums(is.na(training)) == 0]
+```
+# Create a cross validation set from the training data set
+```{r echo=TRUE}
+set.seed(90011009)
+
+inTrain <- createDataPartition(training$classe, p=3/4, list=FALSE)
+trainingdata <- training[inTrain, ]
+testingdata <- training[-inTrain, ]
+```
+
