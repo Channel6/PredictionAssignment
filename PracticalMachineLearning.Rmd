@@ -114,7 +114,7 @@ accuracy
 # Prediction for the Test Data Set
 ```{r echo=TRUE}
 final_result <- predict(rfmodel, testingdata)
-final_result
+levels(final_result)
 ```
 
 # Appendix
@@ -125,6 +125,7 @@ Below is a visual Correlation Matrix of ```trainingdata```, which is the 3/4 dat
 corrPlot <- cor(trainingdatanumber[, -length(names(trainingdatanumber))])
 corrplot(corrPlot, method="color")
 ```
+
 ## Decision Tree Visualization of trainData using rpart
 ```{r echo=TRUE}
 tree_tree <- rpart(classe ~ ., data=trainingdata, method="class")
